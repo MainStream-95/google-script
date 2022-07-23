@@ -1,0 +1,23 @@
+function doGet(e) {
+
+var spreadsheetId = 'INSERT HERE THE
+
+SPREADSHEET ID';
+
+var sheetName = 'INSERT HERE THE SHEET NAME';
+
+var sheet = SpreadsheetApp .openById(spreadsheetId) .getSheetByName(sheetName);
+
+var results = sheet.getSheetValues(1, 1, sheet.getLastRow(), 1)
+
+.reduce(function(a, b) {return a.concat(b);});
+
+return ContentService.createTextOutput(
+
+e.parameters.callback + '('
+
+JSON.stringify(results) + ')'
+
+).setMimeType(ContentService.MimeType.JAVA SCRIPT);
+
+}
