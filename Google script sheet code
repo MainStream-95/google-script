@@ -1,0 +1,32 @@
+function doGet(e) {
+  return querySheet(e);
+}
+
+function doPost(e) {
+  return querySheet(e);
+}
+
+
+function querySheet(e) {
+
+ var ss = SpreadsheetApp.openByUrl("https://docs.google.com/spreadsheets/d/1xrw6ovZ-Tuu277l39LlKz0wfpjquH6k6rlroZK2GNEs/edit?usp=drivesdk");
+ var sh = ss.getSheetByName("Sheet1");
+ var rg = sh.getName() + "!" + sh.getDataRange().getA1Notation();
+ var sql = e.parameter.SQL;
+ var qry = '=query(' + rg + ',"' + sql + '",1)';
+ 
+ var ts = ss.insertSheet();
+ var setQuery = ts.getRange(1,1).setFormula(qry);
+var values = ts.getDataRange().getValues();
+  ss.deleteSheet(ts);
+var output =[];
+for(var i = 0;i<values.length; i++){
+var row = {};
+row['Set'] = values[i][0];
+row['Value'] = values[i][1];
+output.push(row);
+
+}
+  return ContentService.createTextOutput(JSON.stringify({data: output}) ).setMimeType(ContentService.MimeType.JSON); 
+
+}
